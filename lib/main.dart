@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:match_leaderboard_maker/pages/first_page.dart';
 import 'package:match_leaderboard_maker/pages/home_page.dart';
 import 'package:match_leaderboard_maker/pages/login_page.dart';
+import 'package:match_leaderboard_maker/responsive/desktop_scaffold.dart';
+import 'package:match_leaderboard_maker/responsive/mobile_scaffold.dart';
+import 'package:match_leaderboard_maker/responsive/responsive_layout.dart';
+import 'package:match_leaderboard_maker/responsive/tablet_scaffold.dart';
 import 'package:match_leaderboard_maker/test.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +23,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: false,
       ),
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: HomePage(),
+      // ResponsiveLayout(
+      //   mobileScaffold: MobileScaffold(),
+      //   tabletScaffold: TabletScaffold(),
+      //   desktopScaffold: DesktopScaffold(),
+      // ),
     );
   }
 }
