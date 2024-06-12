@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: false,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: FirstPage(),
       // ResponsiveLayout(
       //   mobileScaffold: MobileScaffold(),
       //   tabletScaffold: TabletScaffold(),

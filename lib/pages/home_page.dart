@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:match_leaderboard_maker/components/my_textfield.dart';
@@ -16,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   final _textController = TextEditingController();
   final _textController1 = TextEditingController();
   int _currentValue = 2;
+  int _powNum = 1;
   bool _isChecked = false;
 
   @override
@@ -45,21 +47,33 @@ class _HomePageState extends State<HomePage> {
 
   void _increment() {
     setState(() {
-      _currentValue++;
+      _powNum++;
+      int newValue = pow(2, _powNum).toInt();
+      if (newValue > _currentValue) {
+        for (int i = _currentValue; i < newValue; i++) {
+          playersName.add('');
+          _controllers.add(TextEditingController());
+        }
+      }
+      _currentValue = newValue;
       _textController.text = _currentValue.toString();
-      playersName.add(''); // Add a new empty string for the new player
-      _controllers.add(TextEditingController()); // Add a new TextEditingController for the new player
     });
   }
 
   void _decrement() {
     setState(() {
-      if (_currentValue > 0) {
-        // Prevent negative values
-        _currentValue--;
+      if (_powNum > 0) {
+        _powNum--;
+        int newValue = pow(2, _powNum).toInt();
+        if (newValue < _currentValue) {
+          playersName.removeRange(newValue, _currentValue);
+          for (var i = newValue; i < _currentValue; i++) {
+            _controllers[i].dispose();
+          }
+          _controllers.removeRange(newValue, _currentValue);
+        }
+        _currentValue = newValue;
         _textController.text = _currentValue.toString();
-        playersName.removeLast(); // Remove the last player
-        _controllers.removeLast().dispose(); // Remove and dispose the last TextEditingController
       }
     });
   }
@@ -67,13 +81,14 @@ class _HomePageState extends State<HomePage> {
   void _updateValue(String value) {
     setState(() {
       int newValue = int.tryParse(value) ?? _currentValue;
-      if (newValue != _currentValue) {
+      int powNum = (log(newValue) / log(2)).ceil();
+      if (powNum != _powNum) {
+        _powNum = powNum;
         if (newValue > _currentValue) {
-          playersName.addAll(List<String>.generate(newValue - _currentValue, (index) => ''));
-          _controllers.addAll(List<TextEditingController>.generate(
-            newValue - _currentValue,
-                (index) => TextEditingController(),
-          ));
+          for (int i = _currentValue; i < newValue; i++) {
+            playersName.add('');
+            _controllers.add(TextEditingController());
+          }
         } else if (newValue < _currentValue) {
           playersName.removeRange(newValue, _currentValue);
           for (var i = newValue; i < _currentValue; i++) {
@@ -98,8 +113,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-        title: Text("Match Leaderboard"),
+        backgroundColor: Colors.grey[850],
+        title: Text("Match Leaderboard", style: TextStyle(color: Colors.orange)),
       ),
       body: Container(
         margin: EdgeInsets.all(4.0),
@@ -107,7 +122,7 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // getting match name
+              // Getting match name
               Container(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -121,22 +136,23 @@ class _HomePageState extends State<HomePage> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.deepPurple,
+                            color: Colors.orange,
                           ),
                           textDirection: TextDirection.rtl,
                         ),
                       ),
-                      SizedBox(
-                        height: 3,
-                      ),
+                      SizedBox(height: 3),
                       MyTextField(
                         controller: _textController1,
                         hintText: 'اسم مسابقه را وارد کنید',
                         obscureText: false,
                         textDirection: TextDirection.rtl,
+                        hintStyle: TextStyle(color: Colors.grey),
+                        fillColor: Colors.white,
+                        textColor: Colors.black,
                       ),
 
-                      //to selecting number of players
+                      // Selecting number of players
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40.0),
                         child: Column(
@@ -149,15 +165,14 @@ class _HomePageState extends State<HomePage> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.deepPurple,
+                                    color: Colors.orange,
                                   ),
                                   textDirection: TextDirection.rtl,
                                 ),
                                 SizedBox(height: 8),
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.deepPurple[100],
-                                    // Background color of the container
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Row(
@@ -165,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                                       IconButton(
                                         icon: Icon(
                                           Icons.add,
-                                          color: Colors.deepPurple,
+                                          color: Colors.orange,
                                         ),
                                         onPressed: _increment,
                                       ),
@@ -175,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                                           keyboardType: TextInputType.number,
                                           onSubmitted: _updateValue,
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 18, color: Colors.deepPurple),
+                                          style: TextStyle(fontSize: 18, color: Colors.black),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
                                           ),
@@ -184,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                                       IconButton(
                                         icon: Icon(
                                           Icons.remove,
-                                          color: Colors.deepPurple,
+                                          color: Colors.orange,
                                         ),
                                         onPressed: _decrement,
                                       ),
@@ -197,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
 
-                      //row has buttons for submit and randomise
+                      // Row with submit and randomize buttons
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Row(
@@ -206,22 +221,23 @@ class _HomePageState extends State<HomePage> {
                             ElevatedButton(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepPurple, // background color
+                                backgroundColor: Colors.orange, // Background color
                               ),
                               child: Text(
                                 'تایید',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
+                                  color: Colors.white,
                                 ),
                                 textDirection: TextDirection.rtl,
                               ),
                             ),
                             Row(
                               children: [
-                                Text('بدون قرعه کشی', style: TextStyle(color: Colors.deepPurple)),
+                                Text('بدون قرعه کشی', style: TextStyle(color: Colors.orange)),
                                 Checkbox(
-                                  activeColor: Colors.deepPurple,
+                                  activeColor: Colors.orange,
                                   value: _isChecked,
                                   onChanged: (bool? value) {
                                     setState(() {
@@ -239,9 +255,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              SizedBox(
-                height: 4,
-              ),
+              SizedBox(height: 4),
 
               Divider(
                 thickness: 0.5,
@@ -254,16 +268,16 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
-                  color: Colors.deepPurple,
+                  color: Colors.orange,
                 ),
               ),
-              //getting player's names
+              // Getting player's names
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.deepPurple[50],
+                  color: Colors.white,
                 ),
-                height: height*2,
+                height: height * 2,
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -276,28 +290,21 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: TextField(
+                                child: MyTextField(
                                   controller: _controllers[index],
-                                  decoration: InputDecoration(
-                                    hintText: 'نام بازیکن',
-                                    hintStyle: TextStyle(color: Colors.deepPurple),
-                                    hintTextDirection: TextDirection.rtl,
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                  onChanged: (value) {
-                                    playersName[index] = value;
-                                  },
+                                  hintText: 'نام بازیکن',
+                                  obscureText: false,
                                   textDirection: TextDirection.rtl,
-                                  style: TextStyle(color: Colors.deepPurple),
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  fillColor: Colors.grey.shade200,
+                                  textColor: Colors.black,
                                 ),
                               ),
                               SizedBox(width: 8),
-                              Text("-${index+1}", style: TextStyle(color: Colors.deepPurple)),
+                              Text(
+                                "-${index + 1}",
+                                style: TextStyle(color: Colors.orange),
+                              ),
                             ],
                           ),
                         );

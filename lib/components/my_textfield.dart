@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
-  final controller;
+  final TextEditingController controller;
   final String hintText;
   final bool obscureText;
-  final TextDirection? textDirection;
-
+  final TextDirection textDirection;
+  final TextStyle? hintStyle;
+  final Color fillColor;
+  final Color textColor;
 
   MyTextField({
     Key? key,
@@ -13,33 +15,37 @@ class MyTextField extends StatelessWidget {
     TextDirection? textDirection,
     required this.hintText,
     required this.obscureText,
-  }) : controller = controller ?? TextEditingController(),
-  textDirection = textDirection ?? TextDirection.ltr;
+    this.hintStyle,
+    this.fillColor = Colors.grey,
+    this.textColor = Colors.black,
+  })  : controller = controller ?? TextEditingController(),
+        textDirection = textDirection ?? TextDirection.ltr,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextField(textDirection: textDirection,
+      child: TextField(
+        textDirection: textDirection,
         controller: controller,
         obscureText: obscureText,
+        style: TextStyle(color: textColor),
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.grey.shade400,
             ),
           ),
-          fillColor: Colors.grey.shade200,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.orange,
+            ),
+          ),
+          fillColor: fillColor,
           filled: true,
           hintText: hintText,
-          hintStyle: TextStyle(
-            color: Colors.grey[500],
-          ),
+          hintStyle: hintStyle ?? TextStyle(color: Colors.grey[500]),
           hintTextDirection: textDirection,
         ),
       ),
