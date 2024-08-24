@@ -43,8 +43,8 @@ class _PlayerContainerState extends State<PlayerContainer> {
   @override
   Widget build(BuildContext context) {
 
-    print(Dimensions.screenHeight);
-    print(Dimensions.screenWidth);
+    // print(Dimensions.screenHeight);
+    // print(Dimensions.screenWidth);
 
     Radius _topLeft = Radius.circular(widget.topRadius);
     Radius _topRight = Radius.circular(widget.topRadius);
@@ -53,14 +53,14 @@ class _PlayerContainerState extends State<PlayerContainer> {
     Radius _bottomRight = Radius.circular(widget.bottomRadius);
 
     return Container(
-      width: 280,
-      height: 40,
+      width: 290,
+      height: Dimensions.playerContainerHeight40,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: Dimensions.playerContainerHeight40,
+            height: Dimensions.playerContainerHeight40,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: _topLeft,
@@ -72,7 +72,7 @@ class _PlayerContainerState extends State<PlayerContainer> {
               child: Text(
                 widget.number.toString(),
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: Dimensions.font18,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF252525),
                 ),
@@ -80,17 +80,17 @@ class _PlayerContainerState extends State<PlayerContainer> {
             ),
           ),
           Container(
-            width: 200,
-            height: 40,
+            width: Dimensions.playerContainerWidth200,
+            height: Dimensions.playerContainerHeight40,
             color: Color(0xFF626262),
             child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
+              padding: EdgeInsets.only(left: Dimensions.playerContainerLeftPadding8),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   widget.playerName,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: Dimensions.font18,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFFD8D8D8),
                     shadows: [
@@ -108,8 +108,8 @@ class _PlayerContainerState extends State<PlayerContainer> {
           GestureDetector(
             onTap: _onTap,
             child: Container(
-              width: 40,
-              height: 40,
+              width: Dimensions.playerContainerHeight40,
+              height: Dimensions.playerContainerHeight40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topRight: _topRight,

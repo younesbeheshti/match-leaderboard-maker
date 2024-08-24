@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 class Player {
   String name;
   int score;
+  int loses = 0;
+  int wins = 0;
   bool isWin = false;
   Color color = Color(0xFF027EFA);
 
@@ -15,12 +17,18 @@ class Player {
   }
 
   int getScore() => this.score;
+  int getLoses() => this.loses;
+  int getWins() => this.wins;
   bool getIsWin() => this.isWin;
   Color getColor() => this.color;
+
 
   void setScore(int score) => this.score = score;
   void setIsWin(bool isWin) => this.isWin = isWin;
   void setColor(Color color) => this.color = color;
+
+  void incrementLoses() => this.loses++;
+  void incrementWins() => this.wins++;
 
   void defaultColor() => this.color = Color(0xFF027EFA);
 }

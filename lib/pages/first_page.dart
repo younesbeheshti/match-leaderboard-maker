@@ -10,23 +10,23 @@ class FirstPage extends StatefulWidget {
 
 class _FirstPageState extends State<FirstPage> {
   List tables = [
-    ["جدول یک حذفی", "/EliminationPage"],
-    ["جدول دو حذفی", "/DoubleEliminationPage"],
-    ["جدول آسیایی", "/AsianTablePage"],
-    ["سیدبندی", "/SidingPage"],
-    ["جدول MW ", "/MWPage"],
+    ["Single Elimination", "/EliminationPage"],
+    ["Double Elimination", "/DoubleEliminationPage"],
+    ["Asian Table", "/AsianTablePage"],
+    ["Seeding", "/SidingPage"],
+    ["MW Table", "/MWPage"],
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF5F5F5),  // Light Gray background
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.grey[200] ?? Colors.grey,
+        backgroundColor: Color(0xFF3F51B5),  // Indigo AppBar
         title: Text(
           "Match Leaderboard",
-          style: TextStyle(color: Colors.orange),
+          style: TextStyle(color: Color(0xFFFFC107)),  // Amber Text
         ),
       ),
       body: SingleChildScrollView(
@@ -40,9 +40,9 @@ class _FirstPageState extends State<FirstPage> {
                   tableType: tables[index][0],
                   routeName: tables[index][1],
                   imagePath: 'assets/bracket.png',
-                  cardColor: Colors.grey[200] ?? Colors.grey,
-                  textColor: Colors.black,
-                  iconColor: Colors.orange,
+                  cardColor: Color(0xFF00BCD4),  // Cyan Card background
+                  textColor: Color(0xFF212121),  // Dark Gray Text
+                  iconColor: Color(0xFFFFC107),  // Amber Icons
                 );
               },
             ),

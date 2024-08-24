@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:match_leaderboard_maker/components/my_textfield.dart';
+import 'package:match_leaderboard_maker/pages/elimination_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -219,7 +220,14 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (int.parse(_textController1.text) == playersName.length) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => EliminationPage()),
+                                  );
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.orange, // Background color
                               ),

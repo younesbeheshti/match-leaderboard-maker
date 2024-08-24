@@ -6,13 +6,8 @@ class PeriodicTable extends StatefulWidget {
   List players = [
     Player(name: 'Player 1'),
     Player(name: 'Player 2'),
-    Player(name: 'Player 2'),
-    Player(name: 'Player 2'),
-    Player(name: 'Player 2'),
-    Player(name: 'Player 2'),
-    Player(name: 'Player 2'),
-    Player(name: 'Player 2'),
-    // ... (other players)
+    Player(name: 'Player 3'),
+    Player(name: 'Player 4'),
   ];
 
   List rounds = [];
@@ -61,6 +56,8 @@ class PeriodicTable extends StatefulWidget {
 class _PeriodicTableState extends State<PeriodicTable> {
   late final int rounds;
   int round = 1;
+  String _text = "مرحله بعدی";
+
 
   @override
   void initState() {
@@ -73,8 +70,12 @@ class _PeriodicTableState extends State<PeriodicTable> {
     for (int i = 0; i < widget.players.length; i++) {
       if (widget.players[i].getIsWin() == true) {
         count++;
-        if (count == widget.players.length / 2) {
+        if (count == widget.players.length / 2 ) {
           saveRounds();
+
+          round++;
+
+
 
           setState(() {
             var temp = widget.players[1];
@@ -84,13 +85,26 @@ class _PeriodicTableState extends State<PeriodicTable> {
             for (int i = 0; i < widget.players.length; i++) {
               widget.players[i].setIsWin(false);
               widget.players[i].defaultColor();
+
+
             }
           });
 
-          round++;
+
+
         }
+
+        // else if (round == rounds) {
+        //   _text = "نتایج بازی";
+        // }
       }
     }
+  }
+
+
+  //
+  void checkForResult(){
+
   }
 
   void checkForEqualBool(int playerIndex, int playerIndex2) {
@@ -126,23 +140,24 @@ class _PeriodicTableState extends State<PeriodicTable> {
     var width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),  // Light Gray background
+      backgroundColor: Color(0xFFF5F5F5), // Light Gray background
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0xFF3F51B5),  // Indigo AppBar
+        backgroundColor: Color(0xFF3F51B5), // Indigo AppBar
         title: const Text(
           "Periodic Table",
-          style: TextStyle(color: Color(0xFFFFC107)),  // Amber Text
+          style: TextStyle(color: Color(0xFFFFC107)), // Amber Text
         ),
       ),
       body: Container(
-        color: Color(0xFFF5F5F5),  // Light Gray background
+        color: Color(0xFFF5F5F5), // Light Gray background
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 17.5, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 17.5, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -154,11 +169,11 @@ class _PeriodicTableState extends State<PeriodicTable> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF3F51B5),
-                      textStyle: TextStyle(fontSize: 17)// Amber Button
-                    ),
-                    child: const Text(
-                      'Next Round',
+                        backgroundColor: Color(0xFF3F51B5),
+                        textStyle: TextStyle(fontSize: 17) // Amber Button
+                        ),
+                    child: Text(
+                      _text,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -171,7 +186,7 @@ class _PeriodicTableState extends State<PeriodicTable> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF3F51B5),  // Indigo Text
+                      color: Color(0xFF3F51B5), // Indigo Text
                     ),
                   ),
                 ],
@@ -181,7 +196,7 @@ class _PeriodicTableState extends State<PeriodicTable> {
             Stack(
               children: [
                 Container(
-                  color: Color(0xFF00BCD4),  // Cyan background
+                  color: Color(0xFF00BCD4), // Cyan background
                   height: Dimensions.periodicTableHeightBigOneInStack,
                   width: Dimensions.screenWidth - 5,
                 ),
@@ -190,7 +205,7 @@ class _PeriodicTableState extends State<PeriodicTable> {
                   child: Container(
                     height: Dimensions.periodicTableWidthSmallOneInStack,
                     width: Dimensions.screenWidth - 10,
-                    color: Color(0xFFF5F5F5),  // Light Gray inner container
+                    color: Color(0xFFF5F5F5), // Light Gray inner container
                     child: ListView.builder(
                       itemCount: (widget.players.length / 2).toInt(),
                       itemBuilder: (BuildContext context, int index) {
@@ -200,32 +215,56 @@ class _PeriodicTableState extends State<PeriodicTable> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
-                                    height: Dimensions.playerContainerHeightPeriodicTable,
-                                    width: Dimensions.playerContainerWidthPeriodicTable,
+                                    height: Dimensions
+                                        .playerContainerHeightPeriodicTable,
+                                    width: Dimensions
+                                        .playerContainerWidthPeriodicTable,
                                     child: Center(
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
                                             widget.players[index].getName(),
-                                            style: const TextStyle(color: Color(0xFF212121)),  // Dark Gray Text
+                                            style: const TextStyle(
+                                                color: Color(
+                                                    0xFF212121)), // Dark Gray Text
                                           ),
                                           Checkbox(
-                                            value: widget.players[index].getIsWin(),
+                                            value: widget.players[index]
+                                                .getIsWin(),
                                             onChanged: (value) {
                                               setState(() {
-                                                widget.players[index].setIsWin(value!);
-                                                checkForEqualBool(index, widget.players.length - 1 - index);
+                                                widget.players[index]
+                                                    .setIsWin(value!);
+                                                checkForEqualBool(
+                                                    index,
+                                                    widget.players.length -
+                                                        1 -
+                                                        index);
 
-                                                if (widget.players[index].getIsWin() == true) {
-                                                  widget.players[index].setColor(Colors.green);
-                                                  widget.players[widget.players.length - 1 - index].setColor(Colors.red);
+                                                if (widget.players[index]
+                                                        .getIsWin() ==
+                                                    true) {
+                                                  widget.players[index]
+                                                      .setColor(Colors.green);
+                                                  widget.players[widget
+                                                              .players.length -
+                                                          1 -
+                                                          index]
+                                                      .setColor(Colors.red);
                                                 } else {
-                                                  widget.players[index].defaultColor();
-                                                  widget.players[widget.players.length - 1 - index].defaultColor();
+                                                  widget.players[index]
+                                                      .defaultColor();
+                                                  widget.players[widget
+                                                              .players.length -
+                                                          1 -
+                                                          index]
+                                                      .defaultColor();
                                                 }
                                               });
                                             },
@@ -239,31 +278,72 @@ class _PeriodicTableState extends State<PeriodicTable> {
                                     ),
                                   ),
                                   Container(
-                                    height: Dimensions.playerContainerHeightPeriodicTable,
-                                    width: Dimensions.playerContainerWidthPeriodicTable,
+                                    height: Dimensions
+                                        .playerContainerHeightPeriodicTable,
+                                    width: Dimensions
+                                        .playerContainerWidthPeriodicTable,
                                     child: Center(
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Text(
-                                            widget.players[widget.players.length - 1 - index].getName(),
-                                            style: const TextStyle(color: Color(0xFF212121)),  // Dark Gray Text
+                                            widget.players[
+                                                    widget.players.length -
+                                                        1 -
+                                                        index]
+                                                .getName(),
+                                            style: const TextStyle(
+                                                color: Color(
+                                                    0xFF212121)), // Dark Gray Text
                                           ),
                                           Checkbox(
-                                            value: widget.players[widget.players.length - 1 - index].getIsWin(),
+                                            value: widget.players[
+                                                    widget.players.length -
+                                                        1 -
+                                                        index]
+                                                .getIsWin(),
                                             onChanged: (value) {
-                                              setState(() {
-                                                widget.players[widget.players.length - 1 - index].setIsWin(value!);
-                                                checkForEqualBool(widget.players.length - 1 - index, index);
+                                              setState(
+                                                () {
+                                                  widget.players[widget
+                                                              .players.length -
+                                                          1 -
+                                                          index]
+                                                      .setIsWin(value!);
+                                                  checkForEqualBool(
+                                                      widget.players.length -
+                                                          1 -
+                                                          index,
+                                                      index);
 
-                                                if (widget.players[widget.players.length - 1 - index].getIsWin() == true) {
-                                                  widget.players[widget.players.length - 1 - index].setColor(Colors.green);
-                                                  widget.players[index].setColor(Colors.red);
-                                                } else {
-                                                  widget.players[widget.players.length - 1 - index].defaultColor();
-                                                  widget.players[index].defaultColor();
-                                                }
-                                              },);
+                                                  if (widget.players[widget
+                                                                  .players
+                                                                  .length -
+                                                              1 -
+                                                              index]
+                                                          .getIsWin() ==
+                                                      true) {
+                                                    widget.players[widget
+                                                                .players
+                                                                .length -
+                                                            1 -
+                                                            index]
+                                                        .setColor(Colors.green);
+                                                    widget.players[index]
+                                                        .setColor(Colors.red);
+                                                  } else {
+                                                    widget.players[widget
+                                                                .players
+                                                                .length -
+                                                            1 -
+                                                            index]
+                                                        .defaultColor();
+                                                    widget.players[index]
+                                                        .defaultColor();
+                                                  }
+                                                },
+                                              );
                                             },
                                           ),
                                         ],
@@ -271,13 +351,19 @@ class _PeriodicTableState extends State<PeriodicTable> {
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: widget.players[widget.players.length - 1 - index].getColor(),
+                                      color: widget.players[
+                                              widget.players.length - 1 - index]
+                                          .getColor(),
                                     ),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 20),
-                              (index == (widget.players.length -1)) ? Text("") : const Divider(color: Color(0xFF212121), thickness: 1), // Dark Gray Divider
+                              (index == (widget.players.length / 2 - 1))
+                                  ? Text("")
+                                  : const Divider(
+                                      color: Color(0xFF212121), thickness: 1),
+                              // Dark Gray Divider
                             ],
                           ),
                         );
