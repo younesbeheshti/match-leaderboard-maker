@@ -1,59 +1,85 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-
 import '../util/dimensions.dart';
 
-class PlayerContainer extends StatefulWidget {
 
 
-  String playerName;
-  int number;
+class ClickablePlayerContainer extends StatefulWidget {
+  final String playerName;
+  final int number;
+  final double topRadius;
+  final double bottomRadius;
+  final void Function() onTap;
 
-  double topRadius = 0;
-  double bottomRadius = 0;
-
-  PlayerContainer({
+  ClickablePlayerContainer({
     required this.playerName,
     required this.number,
     required this.topRadius,
     required this.bottomRadius,
-    Key? key,
-  }) : super(key: key);
+    required this.onTap,
+  });
 
   @override
-  State<PlayerContainer> createState() => _PlayerContainerState();
+  _ClickablePlayerContainerState createState() => _ClickablePlayerContainerState();
 }
 
-class _PlayerContainerState extends State<PlayerContainer> {
-  bool isClicked = false;
+class _ClickablePlayerContainerState extends State<ClickablePlayerContainer> {
 
-  Color _color = Color(0xFF626262);
+  bool _isClicked = false;
 
-  void _onTap() {
+
+  void toggleClicked() {
     setState(() {
-      isClicked = !isClicked;
-      if (isClicked) {
-        _color = Color(0xFFF37329);
-      } else {
-        _color = Color(0xFF626262);
-      }
+      _isClicked = !_isClicked;
+      print(_isClicked);
     });
+    widget.onTap();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    // print(Dimensions.screenHeight);
-    // print(Dimensions.screenWidth);
+    return GestureDetector(
+      onTap: toggleClicked,
+      child: PlayerContainer(
+        playerName: widget.playerName,
+        number: widget.number,
+        topRadius: widget.topRadius,
+        bottomRadius: widget.bottomRadius,
+        isClicked: _isClicked,
+        color: _isClicked ? Color(0xFFF37329) : Color(0xFF626262),
+      ),
+    );
+  }
+}
 
-    Radius _topLeft = Radius.circular(widget.topRadius);
-    Radius _topRight = Radius.circular(widget.topRadius);
 
-    Radius _bottomLeft = Radius.circular(widget.bottomRadius);
-    Radius _bottomRight = Radius.circular(widget.bottomRadius);
+class PlayerContainer extends StatelessWidget {
+  final String playerName;
+  final int number;
+  final bool isClicked;
+  final double topRadius;
+  final double bottomRadius;
+  final Color color;
+
+  const PlayerContainer({
+    required this.playerName,
+    required this.number,
+    required this.topRadius,
+    required this.bottomRadius,
+    required this.isClicked,
+    required this.color,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Radius _topLeft = Radius.circular(topRadius);
+    Radius _topRight = Radius.circular(topRadius);
+    Radius _bottomLeft = Radius.circular(bottomRadius);
+    Radius _bottomRight = Radius.circular(bottomRadius);
 
     return Container(
-      width: 290,
+      width: Dimensions.playerContainerWidth280,
       height: Dimensions.playerContainerHeight40,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +96,7 @@ class _PlayerContainerState extends State<PlayerContainer> {
             ),
             child: Center(
               child: Text(
-                widget.number.toString(),
+                number.toString(),
                 style: TextStyle(
                   fontSize: Dimensions.font18,
                   fontWeight: FontWeight.bold,
@@ -88,7 +114,7 @@ class _PlayerContainerState extends State<PlayerContainer> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.playerName,
+                  playerName,
                   style: TextStyle(
                     fontSize: Dimensions.font18,
                     fontWeight: FontWeight.bold,
@@ -105,18 +131,15 @@ class _PlayerContainerState extends State<PlayerContainer> {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: _onTap,
-            child: Container(
-              width: Dimensions.playerContainerHeight40,
-              height: Dimensions.playerContainerHeight40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: _topRight,
-                  bottomRight: _bottomRight,
-                ),
-                color: _color,
+          Container(
+            width: Dimensions.playerContainerHeight40,
+            height: Dimensions.playerContainerHeight40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: _topRight,
+                bottomRight: _bottomRight,
               ),
+              color: color,
             ),
           ),
         ],
