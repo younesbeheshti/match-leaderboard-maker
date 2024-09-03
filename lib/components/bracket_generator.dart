@@ -20,6 +20,10 @@ class BracketGenerator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print("Building MyContainer: length = $length, height = $height");
+    print(players.length);
+
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
