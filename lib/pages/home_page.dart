@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:match_leaderboard_maker/components/my_textfield.dart';
 import 'package:match_leaderboard_maker/pages/elimination_page.dart';
 
+import '../components/player_information.dart';
+import 'double_elimination_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -13,13 +16,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<String> playersName = [];
+  List<Player> players = [];
   List<TextEditingController> _controllers = [];
 
   final _textController = TextEditingController();
   final _textController1 = TextEditingController();
   int _currentValue = 2;
   int _powNum = 1;
-  bool _isChecked = false;
+  bool _doShuffle = false;
 
   @override
   void initState() {
@@ -32,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     playersName = List<String>.generate(_currentValue, (index) => '');
     _controllers = List<TextEditingController>.generate(
       _currentValue,
-          (index) => TextEditingController(),
+      (index) => TextEditingController(),
     );
   }
 
@@ -103,6 +107,18 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _fillPlayersList() {
+    players.clear();  // Clear the players list before filling it
+    for (int i = 0; i < playersName.length; i++) {
+      String name = _controllers[i].text.trim();
+      if (name.isNotEmpty) {
+        playersName[i] = name;
+        players.add(Player(name: name, number: i + 1));
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final currentHeight = MediaQuery.of(context).size.height;
@@ -115,7 +131,8 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.grey[850],
-        title: Text("Match Leaderboard", style: TextStyle(color: Colors.orange)),
+        title:
+            Text("Match Leaderboard", style: TextStyle(color: Colors.orange)),
       ),
       body: Container(
         margin: EdgeInsets.all(4.0),
@@ -155,7 +172,8 @@ class _HomePageState extends State<HomePage> {
 
                       // Selecting number of players
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 40.0),
                         child: Column(
                           children: [
                             Column(
@@ -191,7 +209,9 @@ class _HomePageState extends State<HomePage> {
                                           keyboardType: TextInputType.number,
                                           onSubmitted: _updateValue,
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 18, color: Colors.black),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.black),
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
                                           ),
@@ -221,15 +241,28 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                if (int.parse(_textController1.text) == playersName.length) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => EliminationPage()),
+                                _fillPlayersList();
+
+                                if (players.isEmpty) {
+                                  // Show an error or prompt the user to enter at least one player
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Please enter at least one player.')),
                                   );
+                                  return;
                                 }
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DoubleEliminationPage(
+                                      players: players,
+                                      doShuffle: _doShuffle,
+                                    ),
+                                  ),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange, // Background color
+                                backgroundColor: Colors.orange,
                               ),
                               child: Text(
                                 'تایید',
@@ -243,13 +276,14 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Row(
                               children: [
-                                Text('بدون قرعه کشی', style: TextStyle(color: Colors.orange)),
+                                Text('همراه با قرعه کشی',
+                                    style: TextStyle(color: Colors.orange)),
                                 Checkbox(
                                   activeColor: Colors.orange,
-                                  value: _isChecked,
+                                  value: _doShuffle,
                                   onChanged: (bool? value) {
                                     setState(() {
-                                      _isChecked = value ?? false;
+                                      _doShuffle = value ?? false;
                                     });
                                   },
                                 ),

@@ -15,6 +15,7 @@ class _FirstPageState extends State<FirstPage> {
     ["Asian Table", "/AsianTablePage"],
     ["Seeding", "/SidingPage"],
     ["MW Table", "/MWPage"],
+    ["Periodic Table" , "/PeriodicPage"]
   ];
 
   @override

@@ -111,23 +111,28 @@ class _EliminationPageState extends State<EliminationPage> {
   void pushToNextRound(int listIndex, int playerIndex) {
     if (listIndex < widget.playerList.length - 1 &&
         playerIndex < widget.playerList[listIndex].length) {
-      int pairedIndex =
-          playerIndex % 2 == 0 ? playerIndex + 1 : playerIndex - 1;
+
+      int pairedIndex = playerIndex % 2 == 0 ? playerIndex + 1 : playerIndex - 1;
+
+      // Ensure pairedIndex is within valid range
+      if (pairedIndex < 0 || pairedIndex >= widget.playerList[listIndex].length) {
+        return; // Exit early if pairedIndex is out of bounds
+      }
 
       if (widget.playerList[listIndex][playerIndex] != null &&
           widget.playerList[listIndex][playerIndex]!.getName() == "Rest" &&
-          pairedIndex >= 0 &&
-          pairedIndex < widget.playerList[listIndex].length &&
           widget.playerList[listIndex][pairedIndex] != null &&
           widget.playerList[listIndex][pairedIndex]!.getName() == "Rest") {
+
         int abovePlayerIndex = (playerIndex / 2).floor() - 1;
 
+        // Ensure abovePlayerIndex is within valid range
         if (abovePlayerIndex >= 0 &&
             abovePlayerIndex < widget.playerList[listIndex + 1].length &&
             widget.playerList[listIndex + 1][abovePlayerIndex] == null) {
           setState(() {
             widget.playerList[listIndex + 1][abovePlayerIndex] =
-                widget.playerList[listIndex - 1][abovePlayerIndex * 2];
+            widget.playerList[listIndex - 1][abovePlayerIndex * 2];
           });
         }
 
@@ -135,26 +140,32 @@ class _EliminationPageState extends State<EliminationPage> {
       }
 
       if ((widget.playerList[listIndex][playerIndex] != null &&
-              widget.playerList[listIndex][playerIndex]!.getName() == "Rest") ||
+          widget.playerList[listIndex][playerIndex]!.getName() == "Rest") ||
           (widget.playerList[listIndex][pairedIndex] != null &&
               widget.playerList[listIndex][pairedIndex]!.getName() == "Rest")) {
+
         int targetIndex = (playerIndex / 2).floor();
 
         setState(() {
           if (widget.playerList[listIndex][playerIndex]!.getName() != "Rest") {
             widget.playerList[listIndex + 1][targetIndex] =
-                widget.playerList[listIndex][playerIndex];
+            widget.playerList[listIndex][playerIndex];
           } else {
             widget.playerList[listIndex + 1][targetIndex] =
-                widget.playerList[listIndex][pairedIndex];
+            widget.playerList[listIndex][pairedIndex];
           }
         });
       }
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
+
+    print(widget.players.length);
+    print(widget.playerList[0].length);
+
     return Scaffold(
       backgroundColor: Color(0xFF323232),
       body: widget.playerList.isEmpty
@@ -194,82 +205,6 @@ class _EliminationPageState extends State<EliminationPage> {
     );
   }
 }
-
-// Widget myContainer(int length, List<Player?> players, void Function(int) onTap,
-//     double _height) {
-//   return Container(
-//     child: Column(
-//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//       children: List.generate(
-//         (length / 2.0).ceil(),
-//         (index) {
-//           bool isRestPair = (2 * index < players.length &&
-//                   players[2 * index]?.getName() == "Rest") ||
-//               (2 * index + 1 < players.length &&
-//                   players[2 * index + 1]?.getName() == "Rest");
-//
-//           if (isRestPair) {
-//             return Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-//               child: Container(
-//                 margin: EdgeInsets.zero,
-//                 padding: EdgeInsets.zero,
-//                 width: Dimensions.playerContainerWidth280,
-//                 height: _height,
-//                 color: const Color(0xFF323232),
-//               ),
-//             );
-//           } else {
-//             return Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 24.0),
-//               child: Container(
-//                 margin: EdgeInsets.zero,
-//                 padding: EdgeInsets.zero,
-//                 color: const Color(0xFF323232),
-//                 width: Dimensions.playerContainerWidth280 +
-//                     Dimensions.playerContainerHeight40,
-//                 height: _height,
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     if (players.length == 1)
-//                       ClickablePlayerContainer(
-//                         playerName: players[0]?.getName() ?? "",
-//                         number: players[0]?.getNumber() ?? 1,
-//                         bottomRadius: 10,
-//                         topRadius: 10,
-//                         onTap: () => onTap(0),
-//                       ),
-//                     if (2 * index < players.length && players.length > 1)
-//                       ClickablePlayerContainer(
-//                         playerName: players[2 * index]?.getName() ?? "",
-//                         number:
-//                             players[2 * index]?.getNumber() ?? 2 * index + 1,
-//                         bottomRadius: 0,
-//                         topRadius: 10,
-//                         onTap: () {
-//                           onTap(2 * index);
-//                         },
-//                       ),
-//                     if (2 * index + 1 < players.length)
-//                       ClickablePlayerContainer(
-//                         playerName: players[2 * index + 1]?.getName() ?? "",
-//                         number: players[2 * index + 1]?.getNumber() ??
-//                             2 * index + 2,
-//                         bottomRadius: 10,
-//                         topRadius: 0,
-//                         onTap: () => onTap(2 * index + 1),
-//                       ),
-//                   ],
-//                 ),
-//               ),
-//             );
-//           }
-//         },
-//       ),
-//     ),
-//   );
-// }
 
 double manageHeight(int length, int index) {
   // Set a base size for the container height
