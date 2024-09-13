@@ -3,12 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:match_leaderboard_maker/components/my_textfield.dart';
 import 'package:match_leaderboard_maker/pages/elimination_page.dart';
+import 'package:match_leaderboard_maker/pages/periodic_table.dart';
+import 'package:match_leaderboard_maker/provider/player_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../components/player_information.dart';
 import 'double_elimination_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+  String routeName;
+
+  HomePage({required this.routeName, super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -251,15 +257,50 @@ class _HomePageState extends State<HomePage> {
                                   return;
                                 }
 
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DoubleEliminationPage(
-                                      players: players,
-                                      doShuffle: _doShuffle,
+                                // a condition to check the routename and navigate accordingly
+
+                                if(widget.routeName == '/EliminationPage'){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChangeNotifierProvider(create: (_) => PlayerProvider(
+                                        players: players,
+                                        doShuffle: _doShuffle,
+                                        isDoubleElimination: false,
+                                      ),
+                                      child: EliminationPage(),)
                                     ),
-                                  ),
-                                );
+                                  );
+                                }else if(widget.routeName == '/DoubleEliminationPage'){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChangeNotifierProvider(create: (_) => PlayerProvider(
+                                        players: players,
+                                        doShuffle: _doShuffle,
+                                        isDoubleElimination: true,
+                                      ),
+                                        child: DoubleEliminationPage(),)
+
+                                    ),
+                                  );
+                                }else if(widget.routeName == '/PeriodicPage'){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PeriodicTable(
+                                        players: players,
+                                      ),
+                                    ),
+                                  );
+                                }else{
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('The page is not ready yet...')),
+                                  );
+                                  return;
+
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.orange,
