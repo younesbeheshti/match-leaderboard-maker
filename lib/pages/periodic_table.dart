@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:match_leaderboard_maker/components/player_information.dart';
 import 'package:match_leaderboard_maker/util/dimensions.dart';
 
 class PeriodicTable extends StatefulWidget {
-  List players = [
-    Player(name: 'Player 1'),
-    Player(name: 'Player 2'),
-    Player(name: 'Player 3'),
-    Player(name: 'Player 4'),
-  ];
+  List players = [];
 
   List rounds = [];
 
@@ -47,7 +41,7 @@ class PeriodicTable extends StatefulWidget {
     "دست سی و دوم",
   ];
 
-  PeriodicTable({super.key});
+  PeriodicTable({required this.players, super.key});
 
   @override
   State<PeriodicTable> createState() => _PeriodicTableState();
@@ -57,7 +51,6 @@ class _PeriodicTableState extends State<PeriodicTable> {
   late final int rounds;
   int round = 1;
   String _text = "مرحله بعدی";
-
 
   @override
   void initState() {
@@ -70,12 +63,10 @@ class _PeriodicTableState extends State<PeriodicTable> {
     for (int i = 0; i < widget.players.length; i++) {
       if (widget.players[i].getIsWin() == true) {
         count++;
-        if (count == widget.players.length / 2 ) {
+        if (count == widget.players.length / 2) {
           saveRounds();
 
           round++;
-
-
 
           setState(() {
             var temp = widget.players[1];
@@ -85,13 +76,8 @@ class _PeriodicTableState extends State<PeriodicTable> {
             for (int i = 0; i < widget.players.length; i++) {
               widget.players[i].setIsWin(false);
               widget.players[i].defaultColor();
-
-
             }
           });
-
-
-
         }
 
         // else if (round == rounds) {
@@ -101,11 +87,8 @@ class _PeriodicTableState extends State<PeriodicTable> {
     }
   }
 
-
   //
-  void checkForResult(){
-
-  }
+  void checkForResult() {}
 
   void checkForEqualBool(int playerIndex, int playerIndex2) {
     if (widget.players[playerIndex].getIsWin() == true) {

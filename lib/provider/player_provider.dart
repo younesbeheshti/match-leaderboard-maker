@@ -13,7 +13,7 @@ class PlayerProvider extends ChangeNotifier {
   bool doShuffle;
   bool isDoubleElimination;
 
-  int addLosserPlayerCount = 2;
+  int addLoserPlayerCount = 0;
   bool isDone = false;
   bool listAdded = false;
 
@@ -24,6 +24,8 @@ class PlayerProvider extends ChangeNotifier {
   }) {
     createList();
   }
+
+  int moveToNextList = 0;
 
   //ontap function for players in playerList and if they lose, they will be moved to the lossers bracket
   void onTap(int listIndex, int playerIndex) {
@@ -62,7 +64,6 @@ class PlayerProvider extends ChangeNotifier {
         if (loser!.getName() == playerList[listIndex][0]!.getName() &&
             (listIndex == playerList.length - 1) &&
             !listAdded) {
-
           playerList.add(List<Player?>.filled(2, null));
 
           playerList[listIndex + 1][0] = (loser);
@@ -73,40 +74,46 @@ class PlayerProvider extends ChangeNotifier {
           return;
         }
 
-        if (listIndex == playerList.length - 1) {
-          return;
-        }
         //if (winner == null || loser == null) return;
 
         // Move the loser to the losers' bracket
         int losersRoundIndex = listIndex;
         if (listIndex == 0) {
-          while (addLosserPlayerCount < losersPlayerList[0].length &&
-              losersPlayerList[0][addLosserPlayerCount]?.getName() == "Rest") {
-            addLosserPlayerCount++;
-          }
-          if (addLosserPlayerCount < losersPlayerList[0].length) {
-            losersPlayerList[0][addLosserPlayerCount] = loser;
-            addLosserPlayerCount++;
+          if (addLoserPlayerCount < losersPlayerList[0].length) {
+            losersPlayerList[0][addLoserPlayerCount] = loser;
+            addLoserPlayerCount++;
           }
         } else {
-          if (listIndex == playerList.length - 2 &&
-              !isDone &&
-              playerList.length > 3) {
-            losersPlayerList[listIndex + 1][1] = loser;
-            isDone = true;
-            notifyListeners();
-            return;
+
+
+          // int lstIndex = losersRoundIndex + moveToNextList;
+          int lstIndex = 2 * listIndex - 1;
+          int i = losersPlayerList[lstIndex].length - 1;
+
+
+          while (losersPlayerList[lstIndex][i] != null) {
+            i -= 2;
           }
-          int i = losersPlayerList[losersRoundIndex].length - 1;
-          while (i >= 0 &&
-              (losersPlayerList[losersRoundIndex][i] != null ||
-                  losersPlayerList[losersRoundIndex][i]?.getName() == "Rest")) {
-            i--;
-          }
-          if (i >= 0) {
-            losersPlayerList[losersRoundIndex][i] = loser;
-          }
+          losersPlayerList[lstIndex][i] = loser;
+
+
+          // if (listIndex == playerList.length - 2 &&
+          //     !isDone &&
+          //     playerList.length > 3) {
+          //   losersPlayerList[listIndex + 1][1] = loser;
+          //   isDone = true;
+          //   notifyListeners();
+          //   return;
+          // }
+          // int i = losersPlayerList[losersRoundIndex].length - 1;
+          // while (i >= 0 &&
+          //     (losersPlayerList[losersRoundIndex][i] != null ||
+          //         losersPlayerList[losersRoundIndex][i]?.getName() == "Rest")) {
+          //   i--;
+          // }
+          // if (i >= 0) {
+          //   losersPlayerList[losersRoundIndex][i] = loser;
+          // }
         }
 
         print("Winner: ${winner!.getName()}, Loser: ${loser.getName()}");
@@ -116,23 +123,32 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   void onLoserTap(int listIndex, int playerIndex) {
-    if (listIndex < losersPlayerList.length &&
+    if (!(listIndex < losersPlayerList.length &&
         playerIndex < losersPlayerList[listIndex].length &&
-        losersPlayerList[listIndex][playerIndex] != null) {
-      if (listIndex == losersPlayerList.length - 1) {
-        playerList[listIndex][1] = (losersPlayerList[listIndex][playerIndex]);
-      } else {
-        int targetIndex = (playerIndex / 2).floor();
-        losersPlayerList[listIndex + 1][targetIndex] =
-            losersPlayerList[listIndex][playerIndex];
-      }
+        losersPlayerList[listIndex][playerIndex] != null)){
+      notifyListeners();
+      return;
     }
 
+    if (listIndex == losersPlayerList.length - 1) {
+      playerList[playerList.length - 1][1] = (losersPlayerList[listIndex][playerIndex]);
+      notifyListeners();
+      return;
+    }
+    int targetIndex;
+    if(listIndex % 2 == 0){
+      targetIndex = (playerIndex) - playerIndex % 2;
+    } else {
+      targetIndex = (playerIndex / 2).floor();
+    }
+    losersPlayerList[listIndex + 1][targetIndex] = (losersPlayerList[listIndex][playerIndex]);
     notifyListeners();
   }
 
   void createList() {
     int rounds = (log(players.length) / log(2)).ceil();
+
+    print("rounds: $rounds");
 
     addRestMatches();
 
@@ -141,58 +157,98 @@ class PlayerProvider extends ChangeNotifier {
     }
 
     playerList.add(players); // Add the initial list of players
-    for (int i = 1; i <= rounds; i++) {
-      if (i != rounds) {
+    for (int i = 0; i <= rounds; i++) {
+      if (i == rounds - 1) {
         playerList.add(List<Player?>.filled(
-            playerList[i - 1].length ~/ 2, null)); // Add empty slots
-      } else if(isDoubleElimination) {
-        playerList.add(List<Player?>.filled(2, null));
-      } else {
-        playerList.add(List<Player?>.filled(1, null));
+            playerList[i].length, null)); // Add empty slots
+        break;
+        // } else if (isDoubleElimination) {
+        //   playerList.add(List<Player?>.filled(2, null));
+        // } else {
+        //   playerList.add(List<Player?>.filled(1, null));
       }
 
-      // create loser bracket with the 2 times of size of the playerList
+      playerList.add(List<Player?>.filled(playerList[i].length ~/ 2, null));
 
-      if (isDoubleElimination) {
-        losersPlayerList
-            .add(List<Player?>.filled(playerList[i - 1].length, null));
+      /*if (isDoubleElimination) {
 
-        if (i == rounds) {
-          if (playerList.length >= 3) {
-            losersPlayerList.add(List<Player?>.filled(
-                playerList[i - 1].length, null)); // Add empty slots
-          } else {
-            losersPlayerList.add(List<Player?>.filled(1, null));
-          }
-        }
 
-        // add Rest players to the first round of the loser bracket Two in between
+        // if (i % 2 == 1) { // Odd index
+        //   losersPlayerList.add(List<Player?>.filled(playerList[i - 1].length,null));
+        // } else { // Even index
+        //   losersPlayerList.add(List<Player?>.filled(playerList[i - 1].length ~/ 2, null));
+        // }
 
-        if (i == 1) {
-          int count = 2;
-          int count2 = 0;
 
-          for (int j = 0; j < losersPlayerList[0].length; j++) {
-            if (count > 0) {
-              losersPlayerList[0][j] = Player(name: "Rest", number: 0);
-              count--;
-              count2 = 2; // Reset count2 to 2 every time a replacement occurs
-            } else if (count2 > 0) {
-              count2--;
-              if (count2 == 0) {
-                count = 2; // Reset count to 2 after count2 reaches 0
-              }
-            }
-          }
-        }
-      }
 
-      if (playerList[0].last?.getName() == "Rest") {
-        for (int i = 0; i < playerList[0].length; i++) {
-          pushToNextRound(0, i);
-        }
+        // losersPlayerList
+        //     .add(List<Player?>.filled(playerList[i - 1].length, null));
+
+        // if (i == rounds) {
+        //   if (playerList.length >= 3) {
+        //     losersPlayerList.add(List<Player?>.filled(
+        //         playerList[i - 1].length, null)); // Add empty slots
+        //   } else {
+        //     losersPlayerList.add(List<Player?>.filled(1, null));
+        //   }
+
+        }*/
+      // add Rest players to the first round of the loser bracket Two in between
+
+      // if (i == 1) {
+      //
+      // }
+    }
+
+    if (playerList[0].last?.getName() == "Rest") {
+      for (int i = 0; i < playerList[0].length; i++) {
+        pushToNextRound(0, i);
       }
     }
+
+    if (isDoubleElimination) {
+
+
+
+      for (int j = 1; j < rounds; j++) {
+        int len = pow(2, rounds - j).toInt();
+        losersPlayerList.add(List.filled(len, null));
+        losersPlayerList.add(List.filled(len, null));
+
+        // losersPlayerList.add(List.filled(playerList[0].length ~/ 2, null));
+        //
+        // if (j == 0) {
+        //   losersPlayerList.add(List.filled(playerList[0].length ~/ 2, null));
+        //
+        //   // int count = 2;
+        //   // int count2 = 0;
+        //   //
+        //   // for (int j = 0; j < losersPlayerList[0].length; j++) {
+        //   //   if (count > 0) {
+        //   //     losersPlayerList[0][j] = Player(name: "Rest", number: 0);
+        //   //     count--;
+        //   //     count2 = 2; // Reset count2 to 2 every time a replacement occurs
+        //   //   } else if (count2 > 0) {
+        //   //     count2--;
+        //   //     if (count2 == 0) {
+        //   //       count = 2; // Reset count to 2 after count2 reaches 0
+        //   //     }
+        //   //   }
+        //   //}
+        // } else {
+        //   if (j.isOdd) {
+        //     losersPlayerList
+        //         .add(List.filled(losersPlayerList[j - 1].length, null));
+        //   }
+        //   else {
+        //     losersPlayerList
+        //         .add(List.filled(losersPlayerList[j - 1].length ~/ 2, null));
+        //
+        //   }
+        // }
+      }
+    }
+
     notifyListeners();
   }
 

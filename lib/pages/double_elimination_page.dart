@@ -59,7 +59,8 @@ class DoubleEliminationPage extends StatelessWidget {
                   length: bracketList[index].length,
                   players: bracketList[index],
                   onTap: (playerIndex) => onTapCallback(index, playerIndex),
-                  height: manageHeight(bracketList.length, bracketList.length - index),
+                  height: (Dimensions.playerContainerHeight40 + 10)*2,
+                  // manageHeight(bracketList.length, bracketList.length - index),
                 ),
               );
             },
