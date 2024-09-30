@@ -158,7 +158,7 @@ class PlayerProvider extends ChangeNotifier {
 
     playerList.add(players); // Add the initial list of players
     for (int i = 0; i <= rounds; i++) {
-      if (i == rounds - 1) {
+      if (i == rounds - 1 && isDoubleElimination) {
         playerList.add(List<Player?>.filled(
             playerList[i].length, null)); // Add empty slots
         break;

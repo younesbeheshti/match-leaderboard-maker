@@ -12,22 +12,21 @@ class _FirstPageState extends State<FirstPage> {
   List tables = [
     ["Single Elimination", "/EliminationPage"],
     ["Double Elimination", "/DoubleEliminationPage"],
-    ["Asian Table", "/AsianTablePage"],
-    ["Seeding", "/SidingPage"],
-    ["MW Table", "/MWPage"],
-    ["Periodic Table" , "/PeriodicPage"]
+    // ["Asian Table", "/AsianTablePage"],
+    // ["MW Table", "/MWPage"],
+    ["Periodic Table", "/PeriodicPage"]
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),  // Light Gray background
+      backgroundColor: Color(0xFF323232),  // Darker Gray Background
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0xFF3F51B5),  // Indigo AppBar
+        backgroundColor: Color(0xFF323232),  // Darker Gray AppBar
         title: Text(
           "Match Leaderboard",
-          style: TextStyle(color: Color(0xFFFFC107)),  // Amber Text
+          style: TextStyle(color: Color(0xFFF37329)),  // Bright Orange Text
         ),
       ),
       body: SingleChildScrollView(
@@ -41,9 +40,9 @@ class _FirstPageState extends State<FirstPage> {
                   tableType: tables[index][0],
                   routeName: tables[index][1],
                   imagePath: 'assets/bracket.png',
-                  cardColor: Color(0xFF00BCD4),  // Cyan Card background
-                  textColor: Color(0xFF212121),  // Dark Gray Text
-                  iconColor: Color(0xFFFFC107),  // Amber Icons
+                  cardColor: Color(0xFF626262),  // Medium Gray Card background
+                  textColor: Color(0xFFD8D8D8),  // Light Gray Text
+                  iconColor: Color(0xFFF37329),  // Bright Orange Icons
                 );
               },
             ),

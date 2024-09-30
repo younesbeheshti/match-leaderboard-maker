@@ -3,6 +3,7 @@ import 'package:match_leaderboard_maker/components/player_information.dart';
 import 'package:match_leaderboard_maker/pages/double_elimination_page.dart';
 import 'package:match_leaderboard_maker/pages/first_page.dart';
 import 'package:get/get.dart';
+import 'package:match_leaderboard_maker/pages/home_page.dart';
 import 'package:match_leaderboard_maker/provider/player_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -44,12 +45,13 @@ class MyApp extends StatelessWidget {
           useMaterial3: false,
         ),
         debugShowCheckedModeBanner: false,
-        home: ChangeNotifierProvider(create: (_) => PlayerProvider(
-          players: players,
-          doShuffle: false,
-          isDoubleElimination: true,
-        ),
-          child: DoubleEliminationPage(),)
+        home: FirstPage()
+        // ChangeNotifierProvider(create: (_) => PlayerProvider(
+        //   players: players,
+        //   doShuffle: false,
+        //   isDoubleElimination: true,
+        // ),
+        //   child: DoubleEliminationPage(),)
         ,
       ),
     );

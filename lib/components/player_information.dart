@@ -9,7 +9,7 @@ class Player {
   int loses = 0;
   int wins = 0;
   bool isWin = false;
-  Color color = Color(0xFF027EFA);
+  Color color = Color(0xFF323232);
 
   Player(
       {required this.name,
@@ -45,5 +45,5 @@ class Player {
 
   void incrementWins() => this.wins++;
 
-  void defaultColor() => this.color = Color(0xFF027EFA);
+  void defaultColor() => this.color = Color(0xFF323232);
 }
