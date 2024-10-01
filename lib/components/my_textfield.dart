@@ -8,11 +8,17 @@ class MyTextField extends StatelessWidget {
   final TextStyle? hintStyle;
   final Color fillColor;
   final Color textColor;
+  final FocusNode focusNode;
+  final TextInputAction textInputAction;
+  void Function(String)? onSubmitted;
 
   MyTextField({
     Key? key,
     TextEditingController? controller,
     TextDirection? textDirection,
+    FocusNode? focusNode,
+    TextInputAction? textInputAction,
+    void Function(String)? onSubmitted,
     required this.hintText,
     required this.obscureText,
     this.hintStyle,
@@ -20,6 +26,8 @@ class MyTextField extends StatelessWidget {
     this.textColor = Colors.black,
   })  : controller = controller ?? TextEditingController(),
         textDirection = textDirection ?? TextDirection.ltr,
+        focusNode = focusNode ?? FocusNode(),
+        textInputAction = textInputAction ?? TextInputAction.next,
         super(key: key);
 
   @override
@@ -27,6 +35,9 @@ class MyTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
+        textInputAction: textInputAction,
+        focusNode: focusNode,
+        onSubmitted: onSubmitted,
         textDirection: textDirection,
         controller: controller,
         obscureText: obscureText,

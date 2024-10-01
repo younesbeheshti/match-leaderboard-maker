@@ -194,15 +194,15 @@ class PlayerProvider extends ChangeNotifier {
   //function to seed the players
   void seedPlayers() {
     int len = 4;
-    int listLen = players.length-1;
+    int listLen = players.length;
     int start = 0;
     Player temp;
     if(players.length > 4) {
       while (start < listLen) {
-        for (int i = start; i < len; i += 2) {
+        for (int i = start; i < len; i++) {
           temp = players[i];
-          players[i] = players[listLen - i];
-          players[listLen - i] = temp;
+          players[i] = players[listLen - i -1];
+          players[listLen - i  -1] = temp;
         }
         start += 4;
         len +=4;
@@ -212,8 +212,8 @@ class PlayerProvider extends ChangeNotifier {
 
       for (int i = 0; i < listLen; i++) {
         temp = players[i];
-        players[i] = players[listLen - i];
-        players[listLen - i] = temp;
+        players[i] = players[listLen - i - 1];
+        players[listLen - i - 1] = temp;
       }
     }
 

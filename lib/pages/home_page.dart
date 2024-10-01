@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   List<String> playersName = [];
   List<Player> players = [];
   List<TextEditingController> _controllers = [];
+  List<FocusNode> _focusNodes = [];
 
   final _textController = TextEditingController();
   final _textController1 = TextEditingController();
@@ -44,6 +45,10 @@ class _HomePageState extends State<HomePage> {
       _currentValue,
       (index) => TextEditingController(),
     );
+    _focusNodes = List<FocusNode>.generate(
+      _currentValue,
+      (index) => FocusNode(),
+    );
   }
 
   @override
@@ -52,6 +57,9 @@ class _HomePageState extends State<HomePage> {
     _textController1.dispose();
     for (var controller in _controllers) {
       controller.dispose();
+    }
+    for (var focusNode in _focusNodes) {
+      focusNode.dispose();
     }
     super.dispose();
   }
@@ -64,6 +72,7 @@ class _HomePageState extends State<HomePage> {
         for (int i = _currentValue; i < newValue; i++) {
           playersName.add('');
           _controllers.add(TextEditingController());
+          _focusNodes.add(FocusNode());
         }
       }
       _currentValue = newValue;
@@ -80,8 +89,10 @@ class _HomePageState extends State<HomePage> {
           playersName.removeRange(newValue, _currentValue);
           for (var i = newValue; i < _currentValue; i++) {
             _controllers[i].dispose();
+            _focusNodes[i].dispose();
           }
           _controllers.removeRange(newValue, _currentValue);
+          _focusNodes.removeRange(newValue, _currentValue);
         }
         _currentValue = newValue;
         _textController.text = _currentValue.toString();
@@ -99,13 +110,16 @@ class _HomePageState extends State<HomePage> {
           for (int i = _currentValue; i < newValue; i++) {
             playersName.add('');
             _controllers.add(TextEditingController());
+            _focusNodes.add(FocusNode());
           }
         } else if (newValue < _currentValue) {
           playersName.removeRange(newValue, _currentValue);
           for (var i = newValue; i < _currentValue; i++) {
             _controllers[i].dispose();
+            _focusNodes[i].dispose();
           }
           _controllers.removeRange(newValue, _currentValue);
+          _focusNodes.removeRange(newValue, _currentValue);
         }
         _currentValue = newValue;
         _textController.text = _currentValue.toString();
@@ -361,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                                             onChanged: (bool? value) {
                                               setState(() {
                                                 _doShuffle = value ?? false;
-                                                _doSeeding = false;
+                                                // _doSeeding = false;
                                               });
                                             },
                                           ),
@@ -380,7 +394,7 @@ class _HomePageState extends State<HomePage> {
                                             onChanged: (bool? value) {
                                               setState(() {
                                                 _doSeeding = value ?? false;
-                                                _doShuffle = false;
+                                                // _doShuffle = false;
                                               });
                                             },
                                           ),
@@ -463,39 +477,48 @@ class _HomePageState extends State<HomePage> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _currentValue,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: MyTextField(
-                                  controller: _controllers[index],
-                                  hintText: 'نام بازیکن',
-                                  obscureText: false,
-                                  textDirection: TextDirection.rtl,
-                                  hintStyle:
-                                      TextStyle(color: Color(0xFF626262)),
-                                  // Medium Gray
-                                  fillColor: Color(0xFF838383),
-                                  // Lighter Gray
-                                  textColor: Color(
-                                      0xFF252525), // Almost black for text
-                                ),
+                    shrinkWrap: true,
+                    itemCount: _currentValue,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: MyTextField(
+                                textInputAction: index != _focusNodes.length ? TextInputAction.next : TextInputAction.done,
+                                focusNode: _focusNodes[index],
+                                onSubmitted: (value) {
+                                  if (index + 1 < _focusNodes.length) {
+                                    FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+                                  } else {
+                                    FocusScope.of(context).unfocus(); // Remove focus if it's the last field
+                                  }
+                                },
+                                controller: _controllers[index],
+                                hintText: 'نام بازیکن',
+                                obscureText: false,
+                                textDirection: TextDirection.rtl,
+                                hintStyle:
+                                TextStyle(color: Color(0xFF626262)),
+                                // Medium Gray
+                                fillColor: Color(0xFF838383),
+                                // Lighter Gray
+                                textColor: Color(
+                                    0xFF252525), // Almost black for text
                               ),
-                              SizedBox(width: 8),
-                              Text(
-                                "-${index + 1}",
-                                style: TextStyle(
-                                    color: Color(0xFFF37329)), // Bright Orange
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              "-${index + 1}",
+                              style: TextStyle(
+                                  color: Color(0xFFF37329)), // Bright Orange
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                   ),
                 ),
               ),

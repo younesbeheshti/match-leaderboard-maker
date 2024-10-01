@@ -49,3 +49,5 @@ app.*.map.json
 /android
 /ios
 test.dart
+test1.dart
+test2.dart

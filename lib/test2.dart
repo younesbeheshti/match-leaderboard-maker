@@ -1,102 +1,78 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-void main() => runApp(MyApp(true));
-
-class MyApp extends StatefulWidget {
-
-  // final String playerName;
-  // final int playerNum;
-  bool isTrue = false;
-
-  MyApp(this.isTrue, /*{required this.playerName, required this.playerNum}*/);
-
+class NextTextFieldExample extends StatefulWidget {
   @override
-  State<MyApp> createState() => _MyAppState();
+  _NextTextFieldExampleState createState() => _NextTextFieldExampleState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _NextTextFieldExampleState extends State<NextTextFieldExample> {
+  // Create FocusNodes for each TextField
+  final _focusNode1 = FocusNode();
+  final _focusNode2 = FocusNode();
+  final _focusNode3 = FocusNode();
 
-  bool check = false;
+  @override
+  void dispose() {
+    // Dispose of the FocusNodes when no longer needed
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left : 190.0,),
-                  child: widget.isTrue ? Container(
-                    height: 200,
-                    width: 90,
-                    color: Colors.grey[200],
-                    child: SvgPicture.asset("assets/line_shape.svg"),
-                  ) : Container(),
-                ),
-                Container(
-                  color: Colors.grey[200],
-                  width: 200,
-                  height: 200,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 11),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.blue,
-                          ),
-                          height: 50,
-                          width: 200,
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text("1  player one"),
-                                ),
-                                Checkbox(value: check, onChanged: (value) {check = value!;}),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.blue,
-                          ),
-                          height: 50,
-                          width: 200,
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("1  player one"),
-                                ),
-                                Checkbox(value: check, onChanged: (value) {check = value!;}),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Next TextField Example'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // First TextField
+            TextField(
+              focusNode: _focusNode1,
+              textInputAction: TextInputAction.next, // Display "Next" button
+              onSubmitted: (value) {
+                // When user taps Enter, move focus to the next TextField
+                FocusScope.of(context).requestFocus(_focusNode2);
+              },
+              decoration: InputDecoration(labelText: 'First TextField'),
             ),
-          ),
+            SizedBox(height: 16),
+
+            // Second TextField
+            TextField(
+              focusNode: _focusNode2,
+              textInputAction: TextInputAction.next,
+              onSubmitted: (value) {
+                FocusScope.of(context).requestFocus(_focusNode3);
+              },
+              decoration: InputDecoration(labelText: 'Second TextField'),
+            ),
+            SizedBox(height: 16),
+
+            // Third TextField
+            TextField(
+              focusNode: _focusNode3,
+              textInputAction: TextInputAction.done, // Final TextField
+              onSubmitted: (value) {
+                // Optionally unfocus the last TextField
+                _focusNode3.unfocus();
+              },
+              decoration: InputDecoration(labelText: 'Third TextField'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+void main() {
+  runApp(MaterialApp(
+    home: NextTextFieldExample(),
+  ));
+}
+
