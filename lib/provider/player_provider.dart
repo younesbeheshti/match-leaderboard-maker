@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -151,42 +150,12 @@ class PlayerProvider extends ChangeNotifier {
         playerList.add(List<Player?>.filled(
             playerList[i].length, null)); // Add empty slots
         break;
-        // } else if (isDoubleElimination) {
-        //   playerList.add(List<Player?>.filled(2, null));
-        // } else {
-        //   playerList.add(List<Player?>.filled(1, null));
+
       }
 
       playerList.add(List<Player?>.filled(playerList[i].length ~/ 2, null));
 
-      /*if (isDoubleElimination) {
 
-
-        // if (i % 2 == 1) { // Odd index
-        //   losersPlayerList.add(List<Player?>.filled(playerList[i - 1].length,null));
-        // } else { // Even index
-        //   losersPlayerList.add(List<Player?>.filled(playerList[i - 1].length ~/ 2, null));
-        // }
-
-
-
-        // losersPlayerList
-        //     .add(List<Player?>.filled(playerList[i - 1].length, null));
-
-        // if (i == rounds) {
-        //   if (playerList.length >= 3) {
-        //     losersPlayerList.add(List<Player?>.filled(
-        //         playerList[i - 1].length, null)); // Add empty slots
-        //   } else {
-        //     losersPlayerList.add(List<Player?>.filled(1, null));
-        //   }
-
-        }*/
-      // add Rest players to the first round of the loser bracket Two in between
-
-      // if (i == 1) {
-      //
-      // }
     }
 
     if (playerList[0].last?.getName() == "Rest") {
@@ -225,7 +194,7 @@ class PlayerProvider extends ChangeNotifier {
   //function to seed the players
   void seedPlayers() {
     int len = 4;
-    int listLen = players.length;
+    int listLen = players.length-1;
     int start = 0;
     Player temp;
     if(players.length > 4) {

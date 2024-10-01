@@ -12,11 +12,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // int i = 0;
-  // List players = List.filled(16, Player(
-  //   name: 'Player${i+ 1}',
-  //   number: 0,
-  // ));
+
   List<Player> players = List<Player>.generate(16, (index) {
     Player obj = Player(
       name: 'Player${index + 1}',
@@ -37,6 +33,7 @@ class MyApp extends StatelessWidget {
             players: [],
             doShuffle: false,
             isDoubleElimination: false,
+            doSeeding: false,
           ),
         ),
       ],
@@ -45,7 +42,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: false,
         ),
         debugShowCheckedModeBanner: false,
-        home: HomePage(routeName: "",)
+        home: FirstPage()
         // ChangeNotifierProvider(create: (_) => PlayerProvider(
         //   players: players,
         //   doShuffle: false,
