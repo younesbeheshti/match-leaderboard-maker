@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   int _currentValue = 2;
   int _powNum = 1;
   bool _doShuffle = false;
+  bool _doSeeding = false;
 
   @override
   void initState() {
@@ -314,18 +315,38 @@ class _HomePageState extends State<HomePage> {
                                 textDirection: TextDirection.rtl,
                               ),
                             ),
-                            Row(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text('همراه با قرعه کشی',
-                                    style: TextStyle(color: Color(0xFFF37329))), // Bright Orange
-                                Checkbox(
-                                  activeColor: Color(0xFFF37329), // Bright Orange
-                                  value: _doShuffle,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      _doShuffle = value ?? false;
-                                    });
-                                  },
+                                Row(
+                                  children: [
+                                    Text('همراه با قرعه کشی',
+                                        style: TextStyle(color: Color(0xFFF37329))), // Bright Orange
+                                    Checkbox(
+                                      activeColor: Color(0xFFF37329), // Bright Orange
+                                      value: _doShuffle,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          _doShuffle = value ?? false;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text('سیدبندی',
+                                        style: TextStyle(color: Color(0xFFF37329))), // Bright Orange
+                                    Checkbox(
+                                      activeColor: Color(0xFFF37329), // Bright Orange
+                                      value: _doSeeding,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          _doSeeding = value ?? false;
+                                        });
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

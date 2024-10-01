@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: false,
         ),
         debugShowCheckedModeBanner: false,
-        home: FirstPage()
+        home: HomePage(routeName: "",)
         // ChangeNotifierProvider(create: (_) => PlayerProvider(
         //   players: players,
         //   doShuffle: false,
