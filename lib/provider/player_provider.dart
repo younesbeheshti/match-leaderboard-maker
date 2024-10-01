@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class PlayerProvider extends ChangeNotifier {
   List<List<Player?>> losersPlayerList = [];
 
   bool doShuffle;
+  bool doSeeding;
   bool isDoubleElimination;
 
   int addLoserPlayerCount = 0;
@@ -21,6 +23,7 @@ class PlayerProvider extends ChangeNotifier {
     required this.players,
     required this.doShuffle,
     required this.isDoubleElimination,
+    required this.doSeeding,
   }) {
     createList();
   }
@@ -74,7 +77,6 @@ class PlayerProvider extends ChangeNotifier {
           return;
         }
 
-        //if (winner == null || loser == null) return;
 
         // Move the loser to the losers' bracket
         int losersRoundIndex = listIndex;
@@ -97,23 +99,6 @@ class PlayerProvider extends ChangeNotifier {
           losersPlayerList[lstIndex][i] = loser;
 
 
-          // if (listIndex == playerList.length - 2 &&
-          //     !isDone &&
-          //     playerList.length > 3) {
-          //   losersPlayerList[listIndex + 1][1] = loser;
-          //   isDone = true;
-          //   notifyListeners();
-          //   return;
-          // }
-          // int i = losersPlayerList[losersRoundIndex].length - 1;
-          // while (i >= 0 &&
-          //     (losersPlayerList[losersRoundIndex][i] != null ||
-          //         losersPlayerList[losersRoundIndex][i]?.getName() == "Rest")) {
-          //   i--;
-          // }
-          // if (i >= 0) {
-          //   losersPlayerList[losersRoundIndex][i] = loser;
-          // }
         }
 
         print("Winner: ${winner!.getName()}, Loser: ${loser.getName()}");
@@ -154,6 +139,10 @@ class PlayerProvider extends ChangeNotifier {
 
     if (doShuffle) {
       randomiseList();
+    }
+
+    if(doSeeding){
+      seedPlayers();
     }
 
     playerList.add(players); // Add the initial list of players
@@ -215,37 +204,6 @@ class PlayerProvider extends ChangeNotifier {
         losersPlayerList.add(List.filled(len, null));
         losersPlayerList.add(List.filled(len, null));
 
-        // losersPlayerList.add(List.filled(playerList[0].length ~/ 2, null));
-        //
-        // if (j == 0) {
-        //   losersPlayerList.add(List.filled(playerList[0].length ~/ 2, null));
-        //
-        //   // int count = 2;
-        //   // int count2 = 0;
-        //   //
-        //   // for (int j = 0; j < losersPlayerList[0].length; j++) {
-        //   //   if (count > 0) {
-        //   //     losersPlayerList[0][j] = Player(name: "Rest", number: 0);
-        //   //     count--;
-        //   //     count2 = 2; // Reset count2 to 2 every time a replacement occurs
-        //   //   } else if (count2 > 0) {
-        //   //     count2--;
-        //   //     if (count2 == 0) {
-        //   //       count = 2; // Reset count to 2 after count2 reaches 0
-        //   //     }
-        //   //   }
-        //   //}
-        // } else {
-        //   if (j.isOdd) {
-        //     losersPlayerList
-        //         .add(List.filled(losersPlayerList[j - 1].length, null));
-        //   }
-        //   else {
-        //     losersPlayerList
-        //         .add(List.filled(losersPlayerList[j - 1].length ~/ 2, null));
-        //
-        //   }
-        // }
       }
     }
 
@@ -263,6 +221,36 @@ class PlayerProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  //function to seed the players
+  void seedPlayers() {
+    int len = 4;
+    int listLen = players.length;
+    int start = 0;
+    Player temp;
+    if(players.length > 4) {
+      while (start < listLen) {
+        for (int i = start; i < len; i += 2) {
+          temp = players[i];
+          players[i] = players[listLen - i];
+          players[listLen - i] = temp;
+        }
+        start += 4;
+        len +=4;
+      }
+
+    }else {
+
+      for (int i = 0; i < listLen; i++) {
+        temp = players[i];
+        players[i] = players[listLen - i];
+        players[listLen - i] = temp;
+      }
+    }
+
+    notifyListeners();
+  }
+
 
   void randomiseList() {
     players.shuffle();
