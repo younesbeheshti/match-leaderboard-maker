@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     playersName = List<String>.generate(_currentValue, (index) => '');
     _controllers = List<TextEditingController>.generate(
       _currentValue,
-          (index) => TextEditingController(),
+      (index) => TextEditingController(),
     );
   }
 
@@ -172,8 +172,10 @@ class _HomePageState extends State<HomePage> {
                         hintText: 'اسم مسابقه را وارد کنید',
                         obscureText: false,
                         textDirection: TextDirection.rtl,
-                        hintStyle: TextStyle(color: Color(0xFF626262)), // Medium Gray
-                        fillColor: Color(0xFF838383), // Lighter Gray for number box
+                        hintStyle: TextStyle(color: Color(0xFF626262)),
+                        // Medium Gray
+                        fillColor: Color(0xFF838383),
+                        // Lighter Gray for number box
                         textColor: Color(0xFF252525), // Almost black for text
                       ),
                       Padding(
@@ -204,7 +206,8 @@ class _HomePageState extends State<HomePage> {
                                       IconButton(
                                         icon: Icon(
                                           Icons.add,
-                                          color: Color(0xFFF37329), // Bright Orange
+                                          color: Color(
+                                              0xFFF37329), // Bright Orange
                                         ),
                                         onPressed: _increment,
                                       ),
@@ -216,7 +219,8 @@ class _HomePageState extends State<HomePage> {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               fontSize: 18,
-                                              color: Color(0xFF252525)), // Almost black for text
+                                              color: Color(0xFF252525)),
+                                          // Almost black for text
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
                                           ),
@@ -225,7 +229,8 @@ class _HomePageState extends State<HomePage> {
                                       IconButton(
                                         icon: Icon(
                                           Icons.remove,
-                                          color: Color(0xFFF37329), // Bright Orange
+                                          color: Color(
+                                              0xFFF37329), // Bright Orange
                                         ),
                                         onPressed: _decrement,
                                       ),
@@ -237,124 +242,199 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                _fillPlayersList();
+                      widget.routeName != "/PeriodicPage"
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 25.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      _fillPlayersList();
 
-                                if (players.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Please enter at least one player.'),
-                                    ),
-                                  );
-                                  return;
-                                }
+                                      if (players.isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Please enter at least one player.'),
+                                          ),
+                                        );
+                                        return;
+                                      }
 
-                                if (widget.routeName == '/EliminationPage') {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChangeNotifierProvider(
-                                        create: (_) => PlayerProvider(
-                                          players: players,
-                                          doShuffle: _doShuffle,
-                                          isDoubleElimination: false,
-                                          doSeeding: _doSeeding,
-                                        ),
-                                        child: EliminationPage(),
+                                      switch (widget.routeName) {
+                                        case "/EliminationPage":
+                                          {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ChangeNotifierProvider(
+                                                      create: (_) => PlayerProvider(
+                                                        players: players,
+                                                        doShuffle: _doShuffle,
+                                                        isDoubleElimination: false,
+                                                        doSeeding: _doSeeding,
+                                                      ),
+                                                      child: EliminationPage(
+                                                        routeName: "Elimination",
+                                                      ),
+                                                    ),
+                                              ),
+                                            );
+                                            break;
+                                          }
+                                        case "/DoubleEliminationPage": {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChangeNotifierProvider(
+                                                    create: (_) => PlayerProvider(
+                                                      players: players,
+                                                      doShuffle: _doShuffle,
+                                                      isDoubleElimination: true,
+                                                      doSeeding: _doSeeding,
+                                                    ),
+                                                    child: DoubleEliminationPage(
+                                                      routeName: "Double Elimination",
+                                                    ),
+                                                  ),
+                                            ),
+                                          );
+                                          break;
+                                        }
+                                        case "/PeriodicPage": {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => PeriodicTable(
+                                                players: players,
+                                              ),
+                                            ),
+                                          );
+                                          break;
+                                        }
+                                        default: {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  'The page is not ready yet...'),
+                                            ),
+                                          );
+                                          return;
+                                        }
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color(0xFFF37329), // Bright Orange
+                                    ),
+                                    child: Text(
+                                      'تایید',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Color(
+                                            0xFFD8D8D8), // Light Gray for text
                                       ),
+                                      textDirection: TextDirection.rtl,
                                     ),
-                                  );
-                                } else if (widget.routeName ==
-                                    '/DoubleEliminationPage') {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChangeNotifierProvider(
-                                        create: (_) => PlayerProvider(
-                                          players: players,
-                                          doShuffle: _doShuffle,
-                                          isDoubleElimination: true,
-                                          doSeeding: _doSeeding,
-                                        ),
-                                        child: DoubleEliminationPage(),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text('همراه با قرعه کشی',
+                                              style: TextStyle(
+                                                  color: Color(0xFFF37329))),
+                                          // Bright Orange
+                                          Checkbox(
+                                            activeColor: Color(0xFFF37329),
+                                            // Bright Orange
+                                            value: _doShuffle,
+                                            onChanged: (bool? value) {
+                                              setState(() {
+                                                _doShuffle = value ?? false;
+                                                _doSeeding = false;
+                                              });
+                                            },
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  );
-                                } else if (widget.routeName == '/PeriodicPage') {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PeriodicTable(
-                                        players: players,
+                                      Row(
+                                        children: [
+                                          Text('سیدبندی',
+                                              style: TextStyle(
+                                                  color: Color(0xFFF37329))),
+                                          // Bright Orange
+                                          Checkbox(
+                                            activeColor: Color(0xFFF37329),
+                                            // Bright Orange
+                                            value: _doSeeding,
+                                            onChanged: (bool? value) {
+                                              setState(() {
+                                                _doSeeding = value ?? false;
+                                                _doShuffle = false;
+                                              });
+                                            },
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('The page is not ready yet...'),
-                                    ),
-                                  );
-                                  return;
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFFF37329), // Bright Orange
+                                    ],
+                                  ),
+                                ],
                               ),
-                              child: Text(
-                                'تایید',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Color(0xFFD8D8D8), // Light Gray for text
-                                ),
-                                textDirection: TextDirection.rtl,
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Row(
-                                  children: [
-                                    Text('همراه با قرعه کشی',
-                                        style: TextStyle(color: Color(0xFFF37329))), // Bright Orange
-                                    Checkbox(
-                                      activeColor: Color(0xFFF37329), // Bright Orange
-                                      value: _doShuffle,
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          _doShuffle = value ?? false;
-                                        });
-                                      },
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _fillPlayersList();
+
+                                    if (players.isEmpty) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              'Please enter at least one player.'),
+                                        ),
+                                      );
+                                      return;
+                                    }
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PeriodicTable(
+                                          players: players,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Color(0xFFF37329), // Bright Orange
+                                  ),
+                                  child: Text(
+                                    'تایید',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Color(
+                                          0xFFD8D8D8), // Light Gray for text
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text('سیدبندی',
-                                        style: TextStyle(color: Color(0xFFF37329))), // Bright Orange
-                                    Checkbox(
-                                      activeColor: Color(0xFFF37329), // Bright Orange
-                                      value: _doSeeding,
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          _doSeeding = value ?? false;
-                                        });
-                                      },
-                                    ),
-                                  ],
+                                    textDirection: TextDirection.rtl,
+                                  ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -396,15 +476,20 @@ class _HomePageState extends State<HomePage> {
                                   hintText: 'نام بازیکن',
                                   obscureText: false,
                                   textDirection: TextDirection.rtl,
-                                  hintStyle: TextStyle(color: Color(0xFF626262)), // Medium Gray
-                                  fillColor: Color(0xFF838383), // Lighter Gray
-                                  textColor: Color(0xFF252525), // Almost black for text
+                                  hintStyle:
+                                      TextStyle(color: Color(0xFF626262)),
+                                  // Medium Gray
+                                  fillColor: Color(0xFF838383),
+                                  // Lighter Gray
+                                  textColor: Color(
+                                      0xFF252525), // Almost black for text
                                 ),
                               ),
                               SizedBox(width: 8),
                               Text(
                                 "-${index + 1}",
-                                style: TextStyle(color: Color(0xFFF37329)), // Bright Orange
+                                style: TextStyle(
+                                    color: Color(0xFFF37329)), // Bright Orange
                               ),
                             ],
                           ),

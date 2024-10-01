@@ -6,6 +6,11 @@ import '../components/bracket_generator.dart';
 import '../util/dimensions.dart';
 
 class EliminationPage extends StatelessWidget {
+
+  final String routeName;
+
+  EliminationPage({required this.routeName, super.key});
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PlayerProvider>(context);
@@ -13,7 +18,7 @@ class EliminationPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFF323232),
       appBar: AppBar(
-        title: Text("Double Elimination"),
+        title: Text(routeName),
         centerTitle: true,
         backgroundColor: Color(0xFF323232),
       ),
