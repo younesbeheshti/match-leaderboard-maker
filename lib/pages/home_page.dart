@@ -25,8 +25,11 @@ class _HomePageState extends State<HomePage> {
   List<TextEditingController> _controllers = [];
   List<FocusNode> _focusNodes = [];
 
+  late String matchName;
+
   final _textController = TextEditingController();
   final _textController1 = TextEditingController();
+  final _focusNode = FocusNode();
   int _currentValue = 2;
   int _powNum = 1;
   bool _doShuffle = false;
@@ -182,6 +185,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 3),
                       MyTextField(
+                        focusNode: _focusNode,
+                        onSubmitted: (value) {
+                          FocusScope.of(context).requestFocus(_focusNodes[0]);
+                        },
+                        textInputAction: TextInputAction.next,
                         controller: _textController1,
                         hintText: 'اسم مسابقه را وارد کنید',
                         obscureText: false,
@@ -268,6 +276,8 @@ class _HomePageState extends State<HomePage> {
                                     onPressed: () {
                                       _fillPlayersList();
 
+                                      matchName = _textController1.text.trim();
+
                                       if (players.isEmpty) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
@@ -295,6 +305,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                       child: EliminationPage(
                                                         routeName: "Elimination",
+                                                        matchName: matchName,
                                                       ),
                                                     ),
                                               ),
